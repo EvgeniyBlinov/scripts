@@ -1,0 +1,13 @@
+#!/bin/sh
+#amixer sget 'Master',0
+#amixer -c 0 -q set Master mute
+
+if [ `amixer sget 'Master',0|grep "Front Left:"|cut -d " " -f 9| tr -d [/[,/]]` = "on" ]
+then 
+	`amixer -c 0 -q set Master mute`
+	notify-send -t 1000 звук выключен
+else
+	`amixer -c 0 -q set Master unmute`
+	notify-send -t 1000 звук включен
+fi
+pamixer --toggle-mute

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#set $volume_up                    pamixer -ui 5
+#set $volume_down                  pamixer -ud 5
+#set $volume_get                   pamixer --get-volume
+#set $volume_mute                  pamixer --toggle-mute
+#set $volume_get_mute              pamixer --get-mute && echo 0
+#bindsym XF86AudioRaiseVolume exec pamixer -ui 5 && pamixer --get-volume > "$notify_bar"
+#bindsym XF86AudioLowerVolume exec pamixer -ud 5 && pamixer --get-volume > "$notify_bar"
+#bindsym XF86AudioMute exec pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > "$notify_bar" ) || pamixer --get-volume > "$notify_bar"
+
+amixer -c 0 -q set Master 3%+ unmute || true
+
+SINK=$( pactl list short sinks | sed -e 's,^\([0-9][0-9]*\)[^0-9].*,\1,' | head -n 1 )
+NOW=$( pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,' )
+#pactl -- set-sink-volume $SINK +3%
+pamixer -ui 3 --allow-boost
